@@ -6,6 +6,10 @@ class PostController < ApplicationController
   def show
     @id = params[:id]
     @post = Post.find(@id) #아이디를 가진 친구를 검색을 해서 저장을 해둔다.
+    @user = User.find(@post.user_id)
+    
+    @comments = @post.comments #Comment.all
+    
   end
 
   def new
@@ -18,8 +22,8 @@ class PostController < ApplicationController
     
     Post.create(
       title: @title,
-      content: @content
-      
+      content: @content,
+      user_id: session[:user_id]
       
       )
       redirect_to '/' #크리에이트가 성공적으로 되면 리데이렉트
@@ -69,7 +73,16 @@ class PostController < ApplicationController
   end
 
 
-
+  def create_comment
+    @comment = params[:comment]
+      Comment.create(
+     
+       content: @comment,
+       post_id: params[:post_id]
+      
+      )
+    redirect_to :back
+  end
 
 end
 
